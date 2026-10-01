@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Comic Preview - ComicCraft
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+    >
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <div class="container">
+
+        <h1>ComicCraft</h1>
+
+        <p>Your generated comic</p>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <div class="preview-header">
+
+        <h2>Comic Preview</h2>
+
+        <p>
+            Review your five-panel AI-generated story.
+        </p>
+
+    </div>
+
+    {% for panel in layout %}
+
+    <article class="comic-panel">
+
+        <div class="panel-heading">
+
+            <span class="panel-number">
+                Panel {{ panel.panel_number }}
+            </span>
+
+            <h2>
+                {{ panel.title }}
+            </h2>
+
+        </div>
+
+        <div class="panel-image-container">
+
+            <img
+                src="{{ panel.image_url }}"
+                alt="{{ panel.title }}"
+                class="panel-image"
+            >
+
+        </div>
+
+        <div class="panel-content">
+
+            <p class="scene-description">
+                {{ panel.scene_description }}
+            </p>
+
+            <div class="caption">
+
+                <strong>Caption</strong>
+
+                <p>
+                    {{ panel.caption }}
+                </p>
+
+            </div>
+
+            <div class="narration">
+
+                <strong>Narration</strong>
+
+                <p>
+                    {{ panel.narration }}
+                </p>
+
+            </div>
+
+            <div class="dialogue">
+
+                <strong>Dialogue</strong>
+
+                <p>
+                    {{ panel.dialogue }}
+                </p>
+
+            </div>
+
+        </div>
+
+    </article>
+
+    {% endfor %}
+
+    <section class="export-section">
+
+        <h2>Ready to save your comic?</h2>
+
+        <p>
+            Download the complete comic as a PDF.
+        </p>
+
+        <a
+            href="{{ pdf_url }}"
+            class="primary-button"
+        >
+            Download Your Comic as PDF
+        </a>
+
+        <a
+            href="/"
+            class="secondary-button"
+        >
+            Create Another Comic
+        </a>
+
+    </section>
+
+</main>
+
+<footer>
+
+    <p>
+        ComicCraft — AI-powered storytelling.
+    </p>
+
+</footer>
+
+</body>
+</html>

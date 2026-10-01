@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ app_name }} - AI Comic Creator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #6c3cff 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #ff4ecd 0%, transparent 35%),
+                linear-gradient(135deg, #09001a, #16002d, #080014);
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .hero {
+            text-align: center;
+            padding: 35px 20px 25px;
+        }
+
+        .logo {
+            display: inline-block;
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: -2px;
+            background: linear-gradient(90deg,
+                    #ff4ecd,
+                    #8b5cf6,
+                    #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            margin-top: 12px;
+            font-size: 18px;
+            color: #d8cfff;
+        }
+
+        /* CARD */
+
+        .card {
+            background: rgba(20, 12, 45, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.45),
+                0 0 40px rgba(139, 92, 246, 0.12);
+            backdrop-filter: blur(15px);
+        }
+
+        .card-header {
+            margin-bottom: 30px;
+        }
+
+        .card-header h2 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            color: #bdb4d9;
+            font-size: 15px;
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #f3efff;
+        }
+
+        .required {
+            color: #ff5ac8;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            color: white;
+            padding: 14px 16px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.25s ease;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #8e86a6;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #1b1035;
+            color: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.10);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+        }
+
+        /* TWO COLUMN */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        /* BUTTON */
+
+        .generate-button {
+            width: 100%;
+            margin-top: 10px;
+            border: none;
+            border-radius: 14px;
+            padding: 17px 25px;
+            font-size: 17px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+
+            background: linear-gradient(90deg,
+                    #8b5cf6,
+                    #ec4899,
+                    #f97316);
+
+            box-shadow:
+                0 10px 30px rgba(236, 72, 153, 0.25);
+
+            transition: transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 15px 40px rgba(236, 72, 153, 0.4);
+        }
+
+        .generate-button:active {
+            transform: translateY(0);
+        }
+
+        .generate-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* INFO BOXES */
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .feature {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+
+        .feature p {
+            font-size: 13px;
+            color: #a9a1bd;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px 0 10px;
+            color: #817995;
+            font-size: 13px;
+        }
+
+        /* LOADING */
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #c4b5fd;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #c084fc;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 40px;
+            }
+
+            .card {
+                padding: 22px;
+                border-radius: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+
+        <header class="hero">
+            <div class="logo">ComicCraft</div>
+
+            <p class="tagline">
+                ✨ Turn your imagination into an AI-powered comic.
+            </p>
+        </header>
+
+
+        <!-- MAIN FORM -->
+
+        <main class="card">
+
+            <div class="card-header">
+                <h2>🎨 Create Your Comic</h2>
+
+                <p>
+                    Describe your story, choose your character, setting,
+                    tone and art style.
+                </p>
+            </div>
+
+
+            <form action="/generate" method="POST" id="comicForm">
+
+                <!-- STORY PROMPT -->
+
+                <div class="form-group">
+
+                    <label for="story_prompt">
+                        📖 Story Prompt
+                        <span class="required">*</span>
+                    </label>
+
+                    <textarea id="story_prompt" name="story_prompt"
+                        placeholder="Example: A brave fox discovers a magical forest and must save it from a mysterious shadow..."
+                        required minlength="5" maxlength="2000"></textarea>
+
+                </div>
+
+
+                <!-- CHARACTER -->
+
+                <div class="form-group">
+
+                    <label for="character_name">
+                        🦸 Main Character Name
+                        <span class="required">*</span>
+                    </label>
+
+                    <input type="text" id="character_name" name="character_name" placeholder="Example: Luna" required
+                        minlength="1" maxlength="100">
+
+                </div>
+
+
+                <!-- TWO COLUMN OPTIONS -->
+
+                <div class="form-grid">
+
+                    <!-- SETTING -->
+
+                    <div class="form-group">
+
+                        <label for="setting">
+                            🌲 Setting
+                            <span class="required">*</span>
+                        </label>
+
+                        <select id="setting" name="setting" required>
+
+                            <option value="Enchanted Forest">
+                                🌲 Enchanted Forest
+                            </option>
+
+                            <option value="Futuristic City">
+                                🌆 Futuristic City
+                            </option>
+
+                            <option value="Outer Space">
+                                🚀 Outer Space
+                            </option>
+
+                            <option value="Underwater Kingdom">
+                                🌊 Underwater Kingdom
+                            </option>
+
+                            <option value="Medieval Kingdom">
+                                🏰 Medieval Kingdom
+                            </option>
+
+                            <option value="Haunted Mansion">
+                                👻 Haunted Mansion
+                            </option>
+
+                            <option value="Pirate Island">
+                                🏴‍☠️ Pirate Island
+                            </option>
+
+                            <option value="Desert">
+                                🏜️ Mysterious Desert
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- TONE -->
+
+                    <div class="form-group">
+
+                        <label for="tone">
+                            🎭 Story Tone
+                            <span class="required">*</span>
+                        </label>
+
+                        <select id="tone" name="tone" required>
+
+                            <option value="Funny">
+                                😂 Funny
+                            </option>
+
+                            <option value="Adventure">
+                                ⚔️ Adventure
+                            </option>
+
+                            <option value="Fantasy">
+                                🪄 Fantasy
+                            </option>
+
+                            <option value="Mystery">
+                                🔎 Mystery
+                            </option>
+
+                            <option value="Emotional">
+                                💜 Emotional
+                            </option>
+
+                            <option value="Dark">
+                                🌑 Dark
+                            </option>
+
+                            <option value="Romantic">
+                                💕 Romantic
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ART STYLE -->
+
+                <div class="form-group">
+
+                    <label for="art_style">
+                        🎨 Art Style
+                        <span class="required">*</span>
+                    </label>
+
+                    <select id="art_style" name="art_style" required>
+
+                        <option value="Comic Book">
+                            💥 Classic Comic Book
+                        </option>
+
+                        <option value="Anime">
+                            🌸 Anime
+                        </option>
+
+                        <option value="Manga">
+                            🖤 Manga
+                        </option>
+
+                        <option value="Cartoon">
+                            🐻 Cartoon
+                        </option>
+
+                        <option value="Watercolor">
+                            🖌️ Watercolor
+                        </option>
+
+                        <option value="Digital Art">
+                            💻 Digital Art
+                        </option>
+
+                        <option value="Fantasy Art">
+                            🧙 Fantasy Art
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- GENERATE BUTTON -->
+
+                <button type="submit" class="generate-button" id="generateButton">
+                    ✨ Generate My Comic
+                </button>
+
+
+                <!-- LOADING MESSAGE -->
+
+                <div class="loading" id="loadingMessage">
+                    <span class="spinner"></span>
+                    Creating your comic... This may take a little while.
+                </div>
+
+            </form>
+
+        </main>
+
+
+        <!-- FEATURES -->
+
+        <section class="features">
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🧠
+                </div>
+
+                <h3>
+                    AI Storytelling
+                </h3>
+
+                <p>
+                    Turn your simple idea into a complete comic story
+                    with characters, scenes and dialogue.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    🎨
+                </div>
+
+                <h3>
+                    AI Artwork
+                </h3>
+
+                <p>
+                    Generate artwork for every comic panel based on
+                    your story.
+                </p>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📕
+                </div>
+
+                <h3>
+                    Comic Export
+                </h3>
+
+                <p>
+                    Your finished comic can be arranged into a
+                    downloadable PDF.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+            ComicCraft — AI-powered storytelling ✨
+        </footer>
+
+    </div>
+
+
+    <!-- SMALL JAVASCRIPT -->
+
+    <script>
+
+        const comicForm = document.getElementById("comicForm");
+
+        const generateButton =
+            document.getElementById("generateButton");
+
+        const loadingMessage =
+            document.getElementById("loadingMessage");
+
+
+        comicForm.addEventListener("submit", function () {
+
+            generateButton.disabled = true;
+
+            generateButton.innerHTML =
+                "⏳ Creating Your Comic...";
+
+            loadingMessage.style.display = "block";
+
+        });
+
+    </script>
+
+</body>
+
+</html>
